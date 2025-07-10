@@ -1,6 +1,10 @@
 import deskTemplate from '@/assets/desk.png'
+import { Button } from '@/components/ui/button'
 import useSettingsStore from '@/stores/settings-store'
+import html2canvas from 'html2canvas-pro'
+import { DownloadIcon } from 'lucide-react'
 import { Reorder } from 'motion/react'
+import { useRef } from 'react'
 
 const borderColors = {
 	white: 'white',
@@ -10,11 +14,31 @@ const borderColors = {
 
 const Preview = () => {
 	const { wallColor, arts, setArts, gap, border, borderColor } = useSettingsStore()
+	const previewRef = useRef<HTMLDivElement>(null)
+
+	const handleDownload = async () => {
+		if (!previewRef.current) return
+		const canvas = await html2canvas(previewRef.current, { useCORS: true })
+		const link = document.createElement('a')
+		link.download = 'preview.png'
+		link.href = canvas.toDataURL()
+		link.click()
+	}
+
 	return (
 		<div
-			className="h-full flex-col items-center justify-center"
+			ref={previewRef}
+			className="h-full flex-col items-center justify-center relative"
 			style={{ backgroundColor: wallColor }}
 		>
+			<Button
+				onClick={handleDownload}
+				className="absolute top-4 right-4"
+				variant="outline"
+				size="icon"
+			>
+				<DownloadIcon />
+			</Button>
 			<Reorder.Group
 				as="div"
 				axis="x"
