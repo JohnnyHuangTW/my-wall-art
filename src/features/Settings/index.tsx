@@ -11,6 +11,7 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import useSettingsStore from '@/stores/settings-store'
+import { Trash2Icon } from 'lucide-react'
 import { useState } from 'react'
 
 const Settings = () => {
@@ -31,12 +32,16 @@ const Settings = () => {
 
 	const handleAddArt = () => {
 		if (art) {
-			setArts([...arts, { id: Date.now().toString(), url: art, active: true }])
+			setArts([...arts, { id: Date.now().toString(), url: art, active: true, order: arts.length }])
 			setArt('')
 		}
 	}
 
-	const handleRemoveArt = (id: string) => {
+	const toggleArt = (id: string) => {
+		setArts(arts.map(art => (art.id === id ? { ...art, active: !art.active } : art)))
+	}
+
+	const removeArt = (id: string) => {
 		setArts(arts.filter(art => art.id !== id))
 	}
 
@@ -105,8 +110,21 @@ const Settings = () => {
 					<div className="flex flex-col gap-2 mt-4">
 						{arts?.map(art => (
 							<div key={art.id} className="flex items-center gap-2">
-								<img src={art.url} alt={art.id} className="h-25 w-auto" />
-								<Checkbox checked={art.active} onCheckedChange={() => handleRemoveArt(art.id)} />
+								<div className="flex items-center gap-2 relative group">
+									<img
+										src={art.url}
+										alt={art.id}
+										className="h-25 w-auto group-hover:scale-105 group-hover:opacity-50 transition-all duration-300"
+									/>
+									<Button
+										variant="ghost"
+										className="cursor-pointer absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden group-hover:block bg-transparent hover:bg-transparent"
+										onClick={() => removeArt(art.id)}
+									>
+										<Trash2Icon className="size-8 text-gray-700 transition-all duration-300" />
+									</Button>
+								</div>
+								<Checkbox checked={art.active} onCheckedChange={() => toggleArt(art.id)} />
 							</div>
 						))}
 					</div>
