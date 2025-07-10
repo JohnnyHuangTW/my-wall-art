@@ -107,7 +107,7 @@ const Settings = () => {
 						</Button>
 					</div>
 
-					<div className="flex flex-col gap-2 mt-4">
+					<div className="grid grid-cols-2 gap-2 mt-4 overflow-y-auto max-h-[400px]">
 						{arts?.map(art => (
 							<div key={art.id} className="flex items-center gap-2">
 								<div className="flex items-center gap-2 relative group">
